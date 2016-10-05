@@ -1,3 +1,20 @@
+machine:
+  services:
+    - docker
+  environment:
+    GOPATH: /home/ubuntu/.go_workspace
+    IMPORT_PATH: github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+
+general:
+  # Set build dir
+  build_dir: ../.go_workspace/src/$IMPORT_PATH
+
+checkout:
+  post:
+    # Create application dir in gopath
+    - mkdir -p "$GOPATH/src/$IMPORT_PATH"
+    # Sync sourcecodes into gopath
+    - rsync -az --delete $HOME/$CIRCLE_PROJECT_REPONAME/ $GOPATH/src/$IMPORT_PATH/
 dependencies:
     pre:
         # Install govendor
