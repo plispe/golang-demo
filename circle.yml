@@ -1,0 +1,11 @@
+dependencies:
+    pre:
+        # Install govendor
+        - go get -u github.com/kardianos/govendor
+    override:
+        # Install dependencies
+        - govendor sync
+test:
+  override:
+     # Run go tests
+     - go test -v -race ./...
