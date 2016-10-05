@@ -6,23 +6,15 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gorilla/mux"
 	"github.com/plispe/golang-demo/app/handler"
-	"github.com/urfave/negroni"
+	"github.com/plispe/golang-demo/app/middleware"
 )
 
 func main() {
-	// Gorilla mux router
-	r := mux.NewRouter().StrictSlash(true)
-
-	// Handlers
-	r.HandleFunc("/", handler.MainHandler)
-	r.HandleFunc("/healtz", handler.HealtzHander)
-	r.HandleFunc("/version", handler.VersionHandler)
-
 	// Middleware dispatcher
-	n := negroni.New()
-	n.UseHandler(r)
+	d := middleware.NewDispatcher()
+	// Use gorilla mux as negroni handler
+	d.UseHandler(handler.NewRouter())
 
 	// Load port from envirnment
 	port := os.Getenv("PORT")
@@ -39,5 +31,5 @@ func main() {
 	log.Println(fmt.Sprintf(`Server is listening on address "%s"`, address))
 
 	// Start server
-	http.ListenAndServe(address, n)
+	http.ListenAndServe(address, d)
 }
