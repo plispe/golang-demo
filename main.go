@@ -7,28 +7,18 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/plispe/golang-demo/app/handler"
 	"github.com/urfave/negroni"
-)
-
-const (
-	version = "1.0.0-dev"
 )
 
 func main() {
 	// Gorilla mux router
 	r := mux.NewRouter().StrictSlash(true)
 
-	r.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(w, "Hello world!")
-	})
-
-	r.HandleFunc("/healtz", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(w, "Yean, I'm ready.")
-	})
-
-	r.HandleFunc("/version", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(w, version)
-	})
+	// Handlers
+	r.HandleFunc("/", handler.MainHandler)
+	r.HandleFunc("/healtz", handler.HealtzHander)
+	r.HandleFunc("/version", handler.VersionHandler)
 
 	// Middleware dispatcher
 	n := negroni.New()
