@@ -1,0 +1,33 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: golang-demo
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+        maxUnavailable: 1
+        maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: golang-demo
+    spec:
+      containers:
+        - name: golang-demo
+          image: petrpliska/golang-demo:latest
+          ports:
+            - containerPort: 8888
+          readinessProbe:
+              httpGet:
+                  path: /
+                  port: 8888
+              initialDelaySeconds: 5
+              timeoutSeconds: 1
+          livenessProbe:
+              httpGet:
+                  path: /
+                  port: 8888
+              initialDelaySeconds: 15
+              timeoutSeconds: 1
